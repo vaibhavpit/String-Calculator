@@ -5,15 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>String Calculator</title>
     <style>
-        /* Basic styling */
         body {
             font-family: Arial, sans-serif;
             text-align: center;
             margin-top: 50px;
         }
         input {
-            width: 200px;
-            height: 25px;
+            width: 300px;
+            height: 30px;
             margin-bottom: 10px;
         }
         button {
@@ -30,46 +29,58 @@
 </head>
 <body>
     <h1>String Calculator</h1>
+    
+    <!-- Input field for entering numbers -->
     <input type="text" id="numbersInput" placeholder="Enter numbers">
     <br>
+    
+    <!-- Button to trigger calculation -->
     <button onclick="calculate()">Calculate</button>
+    
+    <!-- Paragraph to display the result -->
     <p id="result"></p>
+    
+    <!-- Paragraph to display any errors (like negative numbers) -->
     <p id="error"></p>
 
+    <!-- Embedded JavaScript -->
     <script>
         function add(numbers) {
-            if (!numbers) return 0;
+            if (!numbers) return 0;  // If input is empty, return 0.
 
-            let delimiter = /,|\n/;
+            let delimiter = /,|\n/;  // Default delimiter: comma or newline.
 
+            // Check if there's a custom delimiter.
             if (numbers.startsWith("//")) {
                 const delimiterEnd = numbers.indexOf("\n");
-                delimiter = new RegExp(numbers.substring(2, delimiterEnd));
-                numbers = numbers.substring(delimiterEnd + 1);
+                delimiter = new RegExp(numbers.substring(2, delimiterEnd));  // Use the custom delimiter.
+                numbers = numbers.substring(delimiterEnd + 1);  // Remove delimiter declaration.
             }
 
-            const numArray = numbers.split(delimiter).map(Number);
+            const numArray = numbers.split(delimiter).map(Number);  // Split by delimiter and convert to numbers.
 
+            // Check for negative numbers.
             const negatives = numArray.filter(num => num < 0);
-            if (negatives.length) {
+            if (negatives.length > 0) {
                 throw new Error(`Negative numbers not allowed: ${negatives.join(", ")}`);
             }
 
-            return numArray.reduce((sum, num) => sum + num, 0);
+            return numArray.reduce((sum, num) => sum + num, 0);  // Sum up the numbers.
         }
 
+        // Function to handle the "Calculate" button click
         function calculate() {
-            const input = document.getElementById("numbersInput").value;
+            const input = document.getElementById("numbersInput").value;  // Get user input.
             const resultElement = document.getElementById("result");
             const errorElement = document.getElementById("error");
 
             try {
-                const result = add(input);
-                resultElement.textContent = `Result: ${result}`;
-                errorElement.textContent = "";
+                const result = add(input);  // Call the add function.
+                resultElement.textContent = `Result: ${result}`;  // Display result.
+                errorElement.textContent = "";  // Clear any error messages.
             } catch (error) {
-                resultElement.textContent = "";
-                errorElement.textContent = error.message;
+                resultElement.textContent = "";  // Clear result if there's an error.
+                errorElement.textContent = error.message;  // Show the error message.
             }
         }
     </script>
