@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>String Calculator</title>
+    <style>
+        /* Basic styling */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        input {
+            width: 200px;
+            height: 25px;
+            margin-bottom: 10px;
+        }
+        button {
+            width: 100px;
+            height: 30px;
+        }
+        p {
+            margin-top: 10px;
+        }
+        #error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>String Calculator</h1>
+    <input type="text" id="numbersInput" placeholder="Enter numbers">
+    <br>
+    <button onclick="calculate()">Calculate</button>
+    <p id="result"></p>
+    <p id="error"></p>
+
+    <script>
+        function add(numbers) {
+            if (!numbers) return 0;
+
+            let delimiter = /,|\n/;
+
+            if (numbers.startsWith("//")) {
+                const delimiterEnd = numbers.indexOf("\n");
+                delimiter = new RegExp(numbers.substring(2, delimiterEnd));
+                numbers = numbers.substring(delimiterEnd + 1);
+            }
+
+            const numArray = numbers.split(delimiter).map(Number);
+
+            const negatives = numArray.filter(num => num < 0);
+            if (negatives.length) {
+                throw new Error(`Negative numbers not allowed: ${negatives.join(", ")}`);
+            }
+
+            return numArray.reduce((sum, num) => sum + num, 0);
+        }
+
+        function calculate() {
+            const input = document.getElementById("numbersInput").value;
+            const resultElement = document.getElementById("result");
+            const errorElement = document.getElementById("error");
+
+            try {
+                const result = add(input);
+                resultElement.textContent = `Result: ${result}`;
+                errorElement.textContent = "";
+            } catch (error) {
+                resultElement.textContent = "";
+                errorElement.textContent = error.message;
+            }
+        }
+    </script>
+</body>
+</html>
